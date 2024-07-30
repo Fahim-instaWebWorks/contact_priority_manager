@@ -11,8 +11,9 @@ import {
   Typography,
   Tooltip,
   Button,
+  IconButton
 } from "@mui/material";
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import { DndContext, closestCenter, useDraggable, useDroppable, DragOverlay } from "@dnd-kit/core";
 import {
   SortableContext,
   useSortable,
@@ -20,31 +21,62 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import Create_contact from "./create_contact/Create_contact";
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 import { data as initialData } from "../data/data";
+import Create_contact from "./create_contact/Create_contact";
 
-const SortableItem = (props) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.id });
+const DragHandle = (props) => {
+  const { attributes, listeners } = props;
+
+  return (
+    <IconButton {...attributes} {...listeners}>
+      <DragHandleIcon />
+    </IconButton>
+  );
+};
+
+const SortableItem = ({ id, children }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({
+    id
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    zIndex: isDragging ? 1 : "auto",
+    background: isDragging ? "white" : "inherit",
+    boxShadow: isDragging ? "0 4px 8px rgba(0, 0, 0, 0.1)" : "none",
   };
 
   return (
-    <TableRow ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {props.children}
+    <TableRow ref={setNodeRef} style={style} {...attributes}>
+      <TableCell>
+        <DragHandle attributes={attributes} listeners={listeners} />
+      </TableCell>
+      {children}
     </TableRow>
   );
 };
 
-const Contact_priority_table = () => {
+const ContactPriorityTable = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [data, setData] = useState(initialData);
+  const [activeId, setActiveId] = useState(null);
+
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
+  };
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
+    setActiveId(null);
 
     if (active.id !== over.id) {
       setData((items) => {
@@ -54,6 +86,8 @@ const Contact_priority_table = () => {
       });
     }
   };
+
+  const activeItem = data.find((item) => item.contact_name === activeId);
 
   return (
     <Paper sx={{ width: "100%", mb: 2 }}>
@@ -66,18 +100,19 @@ const Contact_priority_table = () => {
         >
           Contact Priority Manager
         </Typography>
-        <Tooltip title="Delete">
+        <Tooltip title="Add Contact">
           <Button variant="contained" size="small" onClick={() => setOpenCreateModal(true)}>
             Add Contact
           </Button>
         </Tooltip>
       </Toolbar>
       <TableContainer component={Paper}>
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <SortableContext items={data.map(item => item.contact_name)} strategy={verticalListSortingStrategy}>
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell></TableCell>
                   <TableCell>Contact Name</TableCell>
                   <TableCell>Age</TableCell>
                   <TableCell>Deceased</TableCell>
@@ -92,7 +127,7 @@ const Contact_priority_table = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.map((row, index) => (
+                {data.map((row) => (
                   <SortableItem key={row.contact_name} id={row.contact_name}>
                     <TableCell>{row.contact_name}</TableCell>
                     <TableCell>{row.age}</TableCell>
@@ -110,6 +145,31 @@ const Contact_priority_table = () => {
               </TableBody>
             </Table>
           </SortableContext>
+          <DragOverlay>
+            {activeItem ? (
+              <TableRow style={{
+                background: "white",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                padding: "10px",
+                borderRadius: "4px"
+              }}>
+                <TableCell>
+                  <DragHandle />
+                </TableCell>
+                <TableCell>{activeItem.contact_name}</TableCell>
+                <TableCell>{activeItem.age}</TableCell>
+                <TableCell>{activeItem.deceased ? "Yes" : "No"}</TableCell>
+                <TableCell>{activeItem.property_relationship_name}</TableCell>
+                <TableCell>{activeItem.relationship}</TableCell>
+                <TableCell>{activeItem.mailing_street}</TableCell>
+                <TableCell>{activeItem.mailing_city}</TableCell>
+                <TableCell>{activeItem.mailing_state}</TableCell>
+                <TableCell>{activeItem.mailing_zip}</TableCell>
+                <TableCell>{activeItem.skip_trace_date}</TableCell>
+                <TableCell>{activeItem.skip_trace_result}</TableCell>
+              </TableRow>
+            ) : null}
+          </DragOverlay>
         </DndContext>
       </TableContainer>
       {openCreateModal && <Create_contact open={openCreateModal} setOpen={setOpenCreateModal} />}
@@ -117,4 +177,4 @@ const Contact_priority_table = () => {
   );
 };
 
-export default Contact_priority_table;
+export default ContactPriorityTable;
