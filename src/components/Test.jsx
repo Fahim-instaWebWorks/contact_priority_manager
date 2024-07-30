@@ -11,6 +11,7 @@ import {
   Typography,
   Tooltip,
   Button,
+  IconButton
 } from "@mui/material";
 import { DndContext, closestCenter } from "@dnd-kit/core";
 import {
@@ -22,6 +23,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import Create_contact from "./create_contact/Create_contact";
 import { data as initialData } from "../data/data";
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 
 const SortableItem = (props) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -33,13 +35,18 @@ const SortableItem = (props) => {
   };
 
   return (
-    <TableRow ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <TableRow ref={setNodeRef} style={style} {...attributes}>
+      <TableCell>
+        <IconButton {...listeners}>
+          <DragIndicatorIcon />
+        </IconButton>
+      </TableCell>
       {props.children}
     </TableRow>
   );
 };
 
-const Contact_priority_table = () => {
+const Test = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [data, setData] = useState(initialData);
 
@@ -78,6 +85,7 @@ const Contact_priority_table = () => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell>Drag</TableCell>
                   <TableCell>Contact Name</TableCell>
                   <TableCell>Age</TableCell>
                   <TableCell>Deceased</TableCell>
@@ -117,4 +125,4 @@ const Contact_priority_table = () => {
   );
 };
 
-export default Contact_priority_table;
+export default Test;
