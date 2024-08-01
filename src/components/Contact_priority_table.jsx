@@ -47,9 +47,9 @@ const SortableItem = (props) => {
   );
 };
 
-const ContactPriorityTable = ({ sampleData }) => {
+const ContactPriorityTable = ({ data,setData }) => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [data, setData] = useState(sampleData );
+  // const [data, setData] = useState(sampleData || [] );
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -77,7 +77,7 @@ const ContactPriorityTable = ({ sampleData }) => {
       </Toolbar>
       <TableContainer component={Paper}>
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={data.map((item) => item.Deal_Name)} strategy={verticalListSortingStrategy}>
+          <SortableContext items={data?.map((item) => item?.Deal_Name)} strategy={verticalListSortingStrategy}>
             <Table size="small">
               <TableHead>
                 <TableRow>

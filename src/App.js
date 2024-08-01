@@ -8,7 +8,7 @@ function App() {
   const [zohoLoaded, setZohoLoaded] = useState(false);
   const [recordId, setRecordId] = useState();
   const [moduleName, setModuleName] = useState();
-  const [data,setData] = useState()
+  const [data,setData] = useState([])
 
   async function initZoho() {
     ZOHO.embeddedApp.on("PageLoad", async function (data) {
@@ -42,7 +42,7 @@ function App() {
 
   return (
     <div>
-      <Contact_priority_table sampleData={data}/>
+      <Contact_priority_table data={data} setData={setData}/>
       {/* <Test /> */}
     </div>
   );
