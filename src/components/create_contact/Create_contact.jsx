@@ -24,8 +24,8 @@ const fields = [
   { label: "Deceased", id: "Deceased", type: "number" },
   { label: "Skiptrace Result", id: "Skiptrace Result", type: "text" },
   {
-    label: "Property_Relationship Module",
-    id: "Property_Relationship Module",
+    label: "Rel Module",
+    id: "Rel Module",
     type: "text",
   },
   { label: "Rank", id: "Rank", type: "text" },
@@ -139,7 +139,7 @@ const Create_contact = ({ open, setOpen }) => {
                 item
                 xs={field.label === "Mailing Address" ? 12 : 6}
               >
-                <Box display="flex" alignItems="center" height={20} my={0.5} p={0}>
+                <Box display="flex" alignItems="center" height={10} my={0.5} p={0}>
                   <Typography variant="body1" sx={{ minWidth: "120px" }}>
                     {field.label}
                   </Typography>
@@ -182,7 +182,17 @@ const Create_contact = ({ open, setOpen }) => {
                             margin="dense"
                             variant="outlined"
                             size="small"
-                            sx={{ ml: 2, flex: 1 }}
+                            sx={{
+                            ml: 2,
+                            flex: 1,
+                            "& .MuiInputBase-root": {
+                              padding: '0 10px', // reduce padding for compactness
+                            },
+                            "& .MuiOutlinedInput-input": {
+                              padding: '5px 10px', // adjust padding to reduce height
+                              minHeight: '30px', // set minimum height for compactness
+                            },
+                          }}
                             InputProps={{
                               inputComponent: ({ inputRef, ...props }) => (
                                 <ReactGoogleAutocomplete
@@ -205,7 +215,17 @@ const Create_contact = ({ open, setOpen }) => {
                             margin="dense"
                             variant="outlined"
                             size="small"
-                            sx={{ ml: 2, flex: 1 }}
+                            sx={{
+                            ml: 2,
+                            flex: 1,
+                            "& .MuiInputBase-root": {
+                              padding: '0 10px', // reduce padding for compactness
+                            },
+                            "& .MuiOutlinedInput-input": {
+                              padding: '2px 10px', // adjust padding to reduce height
+                              minHeight: '10px', // set minimum height for compactness
+                            },
+                          }}
                             InputProps={{
                               inputComponent: AutocompleteInput,
                               inputProps: {
@@ -228,7 +248,17 @@ const Create_contact = ({ open, setOpen }) => {
                           type={field.type}
                           variant="outlined"
                           size="small"
-                          sx={{ ml: 2, flex: 1,"& .MuiTextField-root":{padding:0}}}
+                          sx={{
+                            ml: 2,
+                            flex: 1,
+                            "& .MuiInputBase-root": {
+                              padding: '0 10px', // reduce padding for compactness
+                            },
+                            "& .MuiOutlinedInput-input": {
+                              padding: '2px 10px', // adjust padding to reduce height
+                              minHeight: '10px', // set minimum height for compactness
+                            },
+                          }}
                         />
                       )
                     }
